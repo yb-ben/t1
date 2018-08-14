@@ -9,30 +9,23 @@
 class Frame
 {
 
-    public $fin = 0 ;
+   public $opcode;
 
-    public $rsv = 0x0 ;
+   public $length ;
 
-    public $opcode = 0;
+   public $data ;
 
-    public $mask = 1;
-
-    public $sevenBit = 0 ;
-
-    public  $payloadLen = 0;
-
-    public $maskingKey = null ;
-
-    public $payloadData = '' ;
-
-    public $length = 0 ;
-
-
-    public function __construct($data)
+    /**
+     * Frame constructor.
+     * @param $type
+     * @param $length
+     * @param $data
+     */
+    public function __construct($opcode, $length, $data)
     {
-        foreach ($data as $k => $v){
-            $this->$k = $v;
-        }
+        $this->opcode= $opcode;
+        $this->length = $length;
+        $this->data = $data;
     }
 
 

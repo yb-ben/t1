@@ -19,7 +19,7 @@ class Loader
     public $classMap = [];
 
 
-
+    public $files = [];
 
 
 
@@ -55,6 +55,11 @@ class Loader
      */
     public function findFile($className){
 
+        if(isset($this->classMap[$className])){
+            return $this->classMap[$className];
+        }
+
+        return $this->parseNamespace($className);
     }
 
 
@@ -71,8 +76,19 @@ class Loader
     }
 
 
-    private function parseNamespace($className){
+    public function addFiles(Array $files){
+        array_merge($this->files,$files);
+    }
 
+    private function parseNamespace($className){
+        $key = strtoupper($className{0});
+        if(isset($key)){
+            foreach ($this->namespaceMap[$key] as $k => $v ){
+                if(strpos($v,$className)){
+                   return str_replace($k,$v,$className);
+                }
+            }
+        }
     }
 
 }

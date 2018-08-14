@@ -8,11 +8,22 @@
 class FrameDecoder
 {
 
+    const WS_OP_AGAIN = 0X0;//还有后续分片
+    const WS_OP_TEXT = 0X1;//文本
+    const WS_OP_BINARY = 0X2;//二进制
+    const WS_OP_CLOSE = 0X8;//关闭
+    const WS_OP_PING = 0X9;
+    const WS_OP_PONG = 0XA;
+
+    private $opcodes = [
+      self::WS_OP_AGAIN,self::WS_OP_TEXT,self::WS_OP_BINARY,self::WS_OP_PING,self::WS_OP_PONG,self::WS_OP_CLOSE
+    ];
+
     private $fin = 0 ;
 
-    private $rsv = 0x0 ;
+    private $rsv = 0;
 
-    private $opcode = 0;
+    private $opcode ;
 
     private $mask = 1;
 
@@ -26,27 +37,27 @@ class FrameDecoder
 
     private $length = 0 ;
 
+    private $data = [];
 
 
-    public function parsePacket($packet){
+
+    public function parseFrame($packet, $skip = 0){
+        $packet = substr($packet,$skip);
         $this->parseLength($packet);
         $this->parseFirstByte($packet{0});
         $this->parseMaskBit();
-        $leftPacket = $this->parsePayloadLen($packet);
-        $this->mask && $this->parseMaskingKey(substr($leftPacket,0,4));
-        $this->parsePayloadData(substr($leftPacket,4));
-        unset($packet,$leftPacket);
-        return new Frame([
-            'fin' => $this->fin ,
-            'rsv' => $this->rsv ,
-            'opcode' => $this->opcode,
-            'mask' => $this->mask,
-            'sevenBit' => $this->sevenBit,
-            'payloadLen' => $this->payloadLen,
-            'maskingKey' => $this->maskingKey,
-            'payloadData' => $this->payloadData,
-            'length' => $this->length
-        ]);
+        $skip += $this->parsePayloadLen($packet);
+        $this->mask && $this->parseMaskingKey(substr($packet,$skip,4));
+        $skip += 4;
+        $this->parsePayloadData(substr($packet,$skip ,$this->payloadLen));
+        $skip += $this->payloadLen;
+        ($this->opcode === self::WS_OP_TEXT || $this->opcode === self::WS_OP_BINARY) && $this->data[] = new Frame($this->opcode,$this->payloadLen,$this->payloadData);
+
+
+        if($this->fin === 1 && $this->opcode === self::WS_OP_AGAIN){
+            return $this->data;
+        }
+        return $this->parseFrame($packet,$skip);
     }
 
 
@@ -62,6 +73,9 @@ class FrameDecoder
         $this->rsv = $firstByte & 0x70;
 
         $this->opcode = $firstByte & 0x0f ;
+
+        if(!in_array($this->opcode,$this->opcodes))
+            throw new \Exception;
     }
 
 
@@ -73,17 +87,17 @@ class FrameDecoder
         $this->sevenBit = $v = substr($packet,1,1) & 0x7f;
         if($v > -1 && $v < 126){
             $this->payloadLen= $v;
-            $leftPacket = substr($packet , 2);
+            $skip = 1;
         }elseif($v == 126){
             $this->parseTwoBytePayloadLen(substr($packet,2,2));
-            $leftPacket = substr($packet , 4);
+            $skip = 2 ;
         }elseif($v == 127){
             $this->parseFourBytePayloadLen(substr($packet,4,8));
-            $leftPacket = substr($packet,10);
+            $skip = 8;
         }else{
-            throw new Exception();
+            throw new \Exception;
         }
-        return $leftPacket;
+        return $skip;
     }
 
     private function parseTwoBytePayloadLen($twoBytes){

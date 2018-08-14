@@ -9,11 +9,14 @@
 class Handshake
 {
 
-    public $headers = [];
+    private $request = null;
+
+    private $allowOrigin = [];
+
+    private $allowIP = [] ;
 
 
-
-    public function parseHeader($raw){
+  /*  public function parseHeader($raw){
        $headers  = explode($raw,'\r\n');
        $keys = array_keys($headers);
         array_walk($keys,function (&$item){
@@ -21,23 +24,40 @@ class Handshake
         });
        $this->headers = array_combine($keys, array_values($headers));
        unset($headers);
+    }*/
+
+    public function __construct($request)
+    {
+        $this->request = $request;
     }
 
-    public function reply(){
+
+    public function response(){
         $response = 'HTTP/1.1 101 Switching Protocols'."\r\n".
-            'Content-Length: 0'. "\r\n".
             'Upgrade: websocket'."\r\n".
             'Sec-Websocket-Accept: '.$this->websocketAcceptKey($this->headers['sec-websocket-key'])."\r\n".
             'Connection: Upgrade'."\r\n".
             "Date: ".(new DateTime(time(),new DateTimeZone('Asia/Shanghai')))->format(DateTime::RFC822).''."\r\n"
         ;
+        return $response;
     }
 
 
-    public function allowOrigin($origins){
-
+    public function setAllowOrigin($allowOrigin = []){
+        array_merge($this->allowOrigin,$allowOrigin);
     }
 
+    public function setAllowIP($allowIP = []){
+        array_merge($this->allowIP,$allowIP);
+    }
+
+    public function allowOrigin($origin){
+       return in_array($origin,$this->allowOrigin);
+    }
+
+    public function allowIP($ip){
+        return in_array($ip,$this->allowIP);
+    }
 
 
     private function websocketAcceptKey($seckey){
