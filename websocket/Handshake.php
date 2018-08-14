@@ -32,6 +32,17 @@ class Handshake
     }
 
 
+    public function check()
+    {
+        try {
+            $this->allowOrigin($this->request->getHeader('origin'));
+            $this->allowIP($this->request->getIP());
+
+        }catch (\Throwable $t){
+
+        }
+    }
+
     public function response(){
         $response = 'HTTP/1.1 101 Switching Protocols'."\r\n".
             'Upgrade: websocket'."\r\n".
@@ -52,11 +63,13 @@ class Handshake
     }
 
     public function allowOrigin($origin){
-       return in_array($origin,$this->allowOrigin);
+       if(!in_array($origin,$this->allowOrigin))
+           throw new Exception;
     }
 
     public function allowIP($ip){
-        return in_array($ip,$this->allowIP);
+        if(!in_array($ip,$this->allowIP))
+            throw new Exception;
     }
 
 
