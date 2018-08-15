@@ -19,111 +19,50 @@ class WebSocketFrame
         self::WS_OP_AGAIN,self::WS_OP_TEXT,self::WS_OP_BINARY,self::WS_OP_PING,self::WS_OP_PONG,self::WS_OP_CLOSE
     ];
 
-    private $fin = 1;
-
-    private $rsv = 0;
-
-    private $opcode ;
-
-    private $mask = 0;
 
 
+    public $fin = 1;
 
-    private $sevenBit = 0;
+    public $rsv = 0;
 
-    private  $payloadLen = 0;
+    public $opcode ;
 
-    private $maskingKey = '' ;// if MASK set to 1;
+    public $mask = 0;
 
-    private $payloadData = '' ;
 
-    private $length = 0 ;
+    public $sevenBit = 0;
 
-    public function setFin(){}
+    public  $payloadLen = 0;
 
-    public function setOpcode(){}
+    public $maskingKey = '' ;// if MASK set to 1;
 
-    public function setPayloadData(){}
+    public $payloadData = '' ;
 
+    public $length = 0 ;
 
     /**
-     * @return array
+     * WebSocketFrame constructor.
+     * @param int $fin
+     * @param int $rsv
+     * @param $opcode
+     * @param int $mask
+     * @param int $sevenBit
+     * @param int $payloadLen
+     * @param string $maskingKey
+     * @param string $payloadData
+     * @param int $length
      */
-    public static function getOpcodes(): array
+    public function __construct(int $fin, int $rsv, $opcode, int $mask, int $sevenBit, int $payloadLen, string $maskingKey, string $payloadData, int $length)
     {
-        return self::$opcodes;
-    }
-
-    /**
-     * @return int
-     */
-    public function getFin(): int
-    {
-        return $this->fin;
-    }
-
-    /**
-     * @return int
-     */
-    public function getRsv(): int
-    {
-        return $this->rsv;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getOpcode()
-    {
-        return $this->opcode;
-    }
-
-    /**
-     * @return int
-     */
-    public function getMask(): int
-    {
-        return $this->mask;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSevenBit(): int
-    {
-        return $this->sevenBit;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPayloadLen(): int
-    {
-        return $this->payloadLen;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMaskingKey(): string
-    {
-        return $this->maskingKey;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPayloadData(): string
-    {
-        return $this->payloadData;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLength(): int
-    {
-        return $this->length;
+        $this->fin = $fin;
+        $this->rsv = $rsv;
+        $this->opcode = $opcode;
+        $this->mask = $mask;
+        $this->sevenBit = $sevenBit;
+        $this->payloadLen = $payloadLen;
+        $this->maskingKey = $maskingKey;
+        $this->payloadData = $payloadData;
+        $this->length = $length;
     }
 
 }

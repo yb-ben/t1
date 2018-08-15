@@ -51,7 +51,8 @@ class FrameDecoder
         $skip += 4;
         $this->parsePayloadData(substr($packet,$skip ,$this->payloadLen));
         $skip += $this->payloadLen;
-        ($this->opcode === self::WS_OP_TEXT || $this->opcode === self::WS_OP_BINARY) && $this->data[] = new Frame($this->opcode,$this->payloadLen,$this->payloadData);
+        ($this->opcode === self::WS_OP_TEXT || $this->opcode === self::WS_OP_BINARY )
+            && $this->data[] = new WebSocketFrame($this->fin,$this->rsv,$this->opcode,$this->mask,$this->sevenBit,$this->payloadLen,$this->maskingKey,$this->payloadData,$this->length);
 
 
         if($this->fin === 1 && $this->opcode === self::WS_OP_AGAIN){

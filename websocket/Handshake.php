@@ -43,14 +43,18 @@ class Handshake
         }
     }
 
-    public function response(){
-        $response = 'HTTP/1.1 101 Switching Protocols'."\r\n".
+    public function allow(){
+       /* $response = 'HTTP/1.1 101 Switching Protocols'."\r\n".
             'Upgrade: websocket'."\r\n".
             'Sec-Websocket-Accept: '.$this->websocketAcceptKey($this->headers['sec-websocket-key'])."\r\n".
-            'Connection: Upgrade'."\r\n".
-            "Date: ".(new DateTime(time(),new DateTimeZone('Asia/Shanghai')))->format(DateTime::RFC822).''."\r\n"
+            'Connection: Upgrade'."\r\n"."\r\n"
         ;
-        return $response;
+        return $response;*/
+    }
+
+    public function reject()
+    {
+
     }
 
 
