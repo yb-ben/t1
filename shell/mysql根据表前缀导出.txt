@@ -1,0 +1,11 @@
+#!/bin/bash
+# mysqldump 根据表前缀批量导出
+mysql_batch_dump()
+{
+
+ a=$(mysql -u$1 -p$2 -D $3 -Bse "show tables like '$4%'" 2>/dev/null)
+mysqldump -u$1 -p$2 $3 $a > $5
+ return 0
+}
+
+mysql_batch_dump root 159753hybHYB! restaurant rs_ /tmp/bbbbb.sql
