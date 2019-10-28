@@ -1,0 +1,66 @@
+<?php
+/**
+ * demo
+ * 修改多个相似的数据库中的表
+ * 
+ */
+
+$sql = [
+    //-------------------------------------------------------------
+    'DROP PROCEDURE IF EXISTS `__DBNAME__`.schema_change',
+
+    //-------------------------------------------------------------
+    'CREATE PROCEDURE `__DBNAME__`.schema_change()
+BEGIN
+UPDATE zmm_admin_menu SET status = 0 WHERE app = "admin" and controller = "discover" and action = "replyme";
+SELECT \'FINISH\';
+END',
+    //-------------------------------------------------------------
+    'CALL `__DBNAME__`.schema_change()'
+];
+
+//排除
+$notThese = ['zmm_test'];
+
+$host = 'rm-wz9c7f7qf1gsk8yt4po.mysql.rds.aliyuncs.com';
+$username = 'chaofan';
+$pwd = 'arn@XHvUz';
+$dbname = 'zmm_test';
+
+try{
+$pdo = new PDO("mysql:host=$host;dbname=$dbname", $username,$pwd);
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$res = $pdo->query('SELECT TABLE_SCHEMA  FROM `information_schema`.TABLES WHERE TABLE_NAME like "zmm_%" GROUP BY TABLE_SCHEMA');
+$data= $res->fetchAll(PDO::FETCH_NUM);
+
+    $count = 0;
+
+    foreach ($data as $item) {
+    $count++;
+        echo $item[0],PHP_EOL;
+    if (in_array($item[0],$notThese)) {
+        continue;
+    }else{
+        $t = str_replace('__DBNAME__', $item[0],$sql[0]);
+        $a = $pdo->query($t);
+       // $a->execute();
+
+
+       $t = str_replace('__DBNAME__', $item[0],$sql[1]);
+
+        $a = $pdo->query($t);
+       // $a->execute();
+
+                $t = str_replace('__DBNAME__', $item[0],$sql[2]);
+                $a = $pdo->query($t);
+            //    $a->execute();
+
+    }
+}
+}catch (\Throwable $t){
+    echo PHP_EOL;
+    echo $count, PHP_EOL;
+    echo $t->getLine(),PHP_EOL;
+    echo $t->getMessage(),PHP_EOL;
+}
+
