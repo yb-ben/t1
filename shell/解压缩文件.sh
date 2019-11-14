@@ -1,11 +1,21 @@
 #!/bin/bash
 
-#Ñ¹ËõÎÄ¼ş
-f="tarfile"
-#¶¨ÒåÄ¿±êÎÄ¼ş¼Ğ
+   #å‹ç¼©æ–‡ä»¶
+f="tarfile.tar.gz"
+t=${f##*.}
+#å®šä¹‰ç›®æ ‡æ–‡ä»¶å¤¹
 arr=("dir1" "dir2")
-
+dir=/tmp/test/
 for element in ${arr[@]}
 do
-tar -zxvf $f $element
+  if [ "$t" == "gz" ] ; then
+     tar -zxf "$f" -C "$element"
+     else
+     tar -xf "$f" -C "$element"
+  fi
+
 done
+
+
+#test git reset --hard
+#test
