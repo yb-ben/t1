@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f7e72c04-065a-434a-be1b-49940c41ebd2" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/shell/替换tab字符.txt" beforeDir="false" afterPath="$PROJECT_DIR$/shell/替换tab字符.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shell/解压缩文件.sh" beforeDir="false" afterPath="$PROJECT_DIR$/shell/解压缩文件.sh" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
