@@ -16,6 +16,3 @@ do
 
 done
 
-#bb
-
-#c
