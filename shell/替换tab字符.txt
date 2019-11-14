@@ -3,3 +3,11 @@
 
 #截取字符串
 t=${f##*.}
+
+
+#bbbbbbbbbbbbbb
+
+
+
+
+#test soft
