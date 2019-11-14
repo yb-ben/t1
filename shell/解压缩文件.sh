@@ -17,5 +17,3 @@ do
 done
 
 
-#test git reset --hard
-#test
