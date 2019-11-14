@@ -5,6 +5,4 @@
 t=${f##*.}
 
 
-#bbbbbbbbbbbbbb
-
-
+#xxxxxxxxxxx
