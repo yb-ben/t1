@@ -1,0 +1,8 @@
+<?php
+ $old = [ 1,2,3,4]; $new = [ 2,3,4,5] ; $remove = [] ; $insert = [];
+function diff(Array $old,Array $new,Array &$insert ,Array &$remove){
+    $insert = array_diff($new ,$old);
+    $remove = array_diff($old,$new);
+}
+
+diff($old, $new, $insert, $remove);
